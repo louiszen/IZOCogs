@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import _ from "lodash";
-import { makeAutoObservable, runInAction, toJS, autorun, set, observable } from "mobx";
+import { makeAutoObservable, runInAction, toJS, autorun, set } from "mobx";
 import Accessor from "./Accessor";
 
 class AppStore {
