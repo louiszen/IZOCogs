@@ -86,7 +86,7 @@ class ZSnackBar extends Component {
   }
 
   render(){
-    let {show, autoHideDuration, children} = this.props;
+    let {children} = this.props;
     return (
       <View style={{
           bottom: SnackbarDis.offset,
