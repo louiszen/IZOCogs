@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-
-import { Text, View } from 'react-native';
+import { Text, View, ViewPropTypes } from 'react-native';
 
 import PropsType from "prop-types";
 import _ from "lodash";
@@ -20,6 +19,7 @@ class HStack extends Component {
     alignItems: PropsType.string,
     width: PropsType.oneOfType([PropsType.string, PropsType.number]),
     spacing: PropsType.oneOfType([PropsType.string, PropsType.number]),
+    style: ViewPropTypes.style
   }
 
   static defaultProps = {
@@ -28,7 +28,8 @@ class HStack extends Component {
     alignContent: undefined,
     alignItems: "center",
     width: "100%",
-    spacing: 0
+    spacing: 0,
+    style: {}
   }
 
   constructor(){
@@ -89,13 +90,14 @@ class HStack extends Component {
 
   render(){
     // eslint-disable-next-line no-unused-vars
-    let {children, spacing, ...other} = this.props;
+    let {children, spacing, style, ...other} = this.props;
     return (
       <View 
         style={{
           display: "flex",
           flexDirection: "row",
-          ...other
+          ...other,
+          ...style
         }}
         >
         {this.renderChildren(children)}

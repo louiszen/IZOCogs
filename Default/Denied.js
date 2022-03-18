@@ -1,20 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { View, Text } from "react-native";
 import { Accessor } from "../../../src/IZOCogs/STATIC";
-import { observer } from "mobx-react";
 import PropsType from "prop-types";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'yellow',
-  },
-});
 
 /**
  * @augments {Component<Props, State>}
  */
-class Container extends Component {
+class Denied extends Component {
 
   static propTypes = {
 
@@ -34,7 +26,7 @@ class Container extends Component {
   }
 
   componentDidUpdate(prevProps, prevState){
-    if(!Accessor.IsIdentical(prevProps, this.props, Object.keys(Container.defaultProps))){
+    if(!Accessor.IsIdentical(prevProps, this.props, Object.keys(Denied.defaultProps))){
       this._setAllStates();
     }
   }
@@ -52,14 +44,13 @@ class Container extends Component {
   }
 
   render(){
-    let {children} = this.props;
     return (
-      <View style={styles.container}>
-        {children}
+      <View>
+        <Text>Not Match</Text>
       </View>
     );
   }
 
 }
 
-export default observer(Container);
+export default Denied;

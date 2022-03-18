@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View } from 'react-native';
+import { Text, View, ViewPropTypes } from 'react-native';
 
 import PropsType from "prop-types";
 import _ from "lodash";
@@ -19,6 +19,7 @@ class VStack extends Component {
     alignItems: PropsType.string,
     height: PropsType.oneOfType([PropsType.string, PropsType.number]),
     spacing: PropsType.oneOfType([PropsType.string, PropsType.number]),
+    style: ViewPropTypes.style
   }
 
   static defaultProps = {
@@ -27,7 +28,8 @@ class VStack extends Component {
     alignContent: undefined,
     alignItems: "center",
     height: "auto",
-    spacing: 0
+    spacing: 0,
+    style: {}
   }
 
   constructor(){
@@ -89,13 +91,14 @@ class VStack extends Component {
 
   render(){
     // eslint-disable-next-line no-unused-vars
-    let {children, spacing, ...other} = this.props;
+    let {children, spacing, style, ...other} = this.props;
     return (
       <View
         style={{
           display: "flex",
           flexDirection: "column",
-          ...other
+          ...other,
+          ...style
         }}
         >
         {this.renderChildren(children)}
