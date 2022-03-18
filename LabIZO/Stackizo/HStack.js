@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import PropsType from "prop-types";
 import _ from "lodash";
