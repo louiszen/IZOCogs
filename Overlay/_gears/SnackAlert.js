@@ -12,7 +12,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import EntypoIcon from 'react-native-vector-icons/Entypo'; 
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'; 
-import { SnackbarDis } from "../../../__SYSDefault/Theme";
+import { ContainerStyle } from "../../../__SYSDefault/Theme";
 import IconX from "../../STATIC/IconX";
 
 /**
@@ -75,41 +75,34 @@ class SnackAlert extends Component {
     }
   }
 
-  renderIcon(bundle, name){
-    switch(bundle){
-      case "feather": return <FeatherIcon size={SnackbarDis.iconSize} name={name} color={Colors.white}/>;
-      case "mui": return <MaterialIcon size={SnackbarDis.iconSize} name={name} color={Colors.white}/>;
-      case "ionic": return <Ionicons size={SnackbarDis.iconSize} name={name} color={Colors.white}/>;
-      case "entypo": return <EntypoIcon size={SnackbarDis.iconSize} name={name} color={Colors.white}/>;
-      case "ant": return <AntDesignIcon size={SnackbarDis.iconSize} name={name} color={Colors.white}/>;
-    }
-  }
-
   renderIconBySeverity(){
     let {severity} = this.state;
+    let {iconSize, color} = ContainerStyle.Snackbar;
     switch(severity){
       default: case "none": return;
-      case "success": return IconX.Get("ant", "staro", SnackbarDis.iconSize, Colors.white);
-      case "warn": case "warning": return IconX.Get("ionic", "warning", SnackbarDis.iconSize, Colors.white);
-      case "info": return IconX.Get("feather", "info", SnackbarDis.iconSize, Colors.white);
-      case "error": return IconX.Get("mui", "error-outline", SnackbarDis.iconSize, Colors.white);
+      case "success": return IconX.Get("ant", "staro", iconSize, color);
+      case "warn": case "warning": return IconX.Get("ionic", "warning", iconSize, color);
+      case "info": return IconX.Get("feather", "info", iconSize, color);
+      case "error": return IconX.Get("mui", "error-outline", iconSize, color);
     }
   }
 
   renderClose(){
+    let {iconSize, color} = ContainerStyle.Snackbar;
     return (
-      <IconButton icon="close" onPress={() => this._close()} size={SnackbarDis.iconSize} color={Colors.white}/>
+      <IconButton icon="close" onPress={() => this._close()} size={iconSize} color={color}/>
     );
       
   }
 
   renderInside(){
     let {message} = this.props;
+    let {fontSize, color} = ContainerStyle.Snackbar;
     if(!_.isEmpty(message)){
       let msgs = message.toString().split("\n");
       let jsx = [];
       _.map(msgs, (o, i) => {
-        jsx.push(<Text style={{fontSize: SnackbarDis.fontSize, color: "white"}} key={i}>{o}</Text>);
+        jsx.push(<Text style={{fontSize: fontSize, color: color}} key={i}>{o}</Text>);
       });
       return (
         <HStack width="auto" spacing={10} style={{

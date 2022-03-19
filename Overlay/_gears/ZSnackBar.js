@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from "react-native";
 import { Accessor } from "../../STATIC";
 import PropsType from "prop-types";
 import HStack from "../../LabIZO/Stackizo/HStack";
-import { SnackbarDis } from "../../../__SYSDefault/Theme";
+import { ContainerStyle } from "../../../__SYSDefault/Theme";
 
 /**
  * @augments {Component<Props, State>}
@@ -89,7 +89,7 @@ class ZSnackBar extends Component {
     let {children} = this.props;
     return (
       <View style={{
-          bottom: SnackbarDis.offset,
+          bottom: ContainerStyle.Snackbar.offset,
           width: "100%",
           height: "auto",
           alignItems: "center",

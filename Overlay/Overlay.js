@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, SafeAreaView } from "react-native";
 import { Accessor, STORE } from "../STATIC";
 import { when } from "mobx";
 import { observer } from "mobx-react";
@@ -13,8 +13,7 @@ import SnackAlert from "./_gears/SnackAlert";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    flex: 1
   },
 });
 
@@ -118,7 +117,7 @@ class Overlay extends Component {
     let {snackOpen} = this.state;
     let {children} = this.props;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         {children}
         <ZSnackBar show={snackOpen} onClose={this.closeSnack} autoHideDuration={this.SnackDuration()}>
           <SnackAlert 
@@ -126,7 +125,7 @@ class Overlay extends Component {
             severity={STORE.alert && STORE.alert.severity} 
             onClose={this.closeSnack}/>
         </ZSnackBar>
-      </View>
+      </SafeAreaView>
     );
   }
 
