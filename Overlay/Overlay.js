@@ -1,19 +1,22 @@
 import React, { Component } from "react";
-import { StyleSheet, View, SafeAreaView } from "react-native";
-import { Accessor, STORE } from "../STATIC";
+import { StyleSheet, View, SafeAreaView, Modal } from "react-native";
+import { Accessor, ColorX, STORE } from "../STATIC";
 import { when } from "mobx";
 import { observer } from "mobx-react";
 import PropsType from "prop-types";
 import _ from "lodash";
 import ZSnackBar from "./_gears/ZSnackBar";
-import HStack from "../LabIZO/Stackizo/HStack";
 import SnackAlert from "./_gears/SnackAlert";
+import { ActivityIndicator } from "react-native-paper";
+import { Spacer, VStack, HStack } from "../LabIZO/Stackizo";
+import { ContainerStyle } from "../../__SYSDefault/Theme";
 
 //import SnackAlert from "./_gears/SnackAlert";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: ContainerStyle.AppBG
   },
 });
 
@@ -114,10 +117,10 @@ class Overlay extends Component {
   }
 
   render(){
-    let {snackOpen} = this.state;
+    let {snackOpen, loadingOpen} = this.state;
     let {children} = this.props;
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         {children}
         <ZSnackBar show={snackOpen} onClose={this.closeSnack} autoHideDuration={this.SnackDuration()}>
           <SnackAlert 
@@ -125,7 +128,17 @@ class Overlay extends Component {
             severity={STORE.alert && STORE.alert.severity} 
             onClose={this.closeSnack}/>
         </ZSnackBar>
-      </SafeAreaView>
+        <Modal visible={loadingOpen} 
+          transparent={true}
+          animationType={"fade"}
+          >
+          <VStack style={{flex: 1, backgroundColor: ColorX.GetColorCSS("black", 0.32)}}>
+            <Spacer/>
+              <ActivityIndicator/>
+            <Spacer/>
+          </VStack>
+        </Modal>
+      </View>
     );
   }
 

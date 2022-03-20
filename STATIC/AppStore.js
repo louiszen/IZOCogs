@@ -29,7 +29,13 @@ class AppStore {
         let existingStore = await AsyncStorage.getItem("STORE");
         if (existingStore) {
           runInAction( () => {
-            set(this, JSON.parse(existingStore));
+            set(this, {
+              ...JSON.parse(existingStore), 
+              loading: false,
+              alert: {},
+              ask: {},
+              backdrop: null
+            });
           });
         }
       }
