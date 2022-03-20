@@ -4,6 +4,7 @@ import { Accessor } from "../../STATIC";
 import PropsType from "prop-types";
 import HStack from "../../LabIZO/Stackizo/HStack";
 import { ContainerStyle } from "../../../__SYSDefault/Theme";
+import FadeInOutView from "../../LabIZO/Animatizo/FadeInOutView";
 
 /**
  * @augments {Component<Props, State>}
@@ -40,11 +41,16 @@ class ZSnackBar extends Component {
         closing: true
       }, () => {
         this.timeout = setTimeout(() => {
-          this.setState({
-            closing: false
-          }, () => {
-            onClose();
-          })
+          if(this.MountFadeView) {
+            this.MountFadeView.fadeOut(200);
+          }
+          setTimeout(() => {
+            this.setState({
+              closing: false
+            }, () => {
+              onClose();
+            })
+          }, 500);
         }, autoHideDuration);
       })
     } 
@@ -57,6 +63,9 @@ class ZSnackBar extends Component {
         let {show} = this.props;
         let {closing} = this.state;
         if(show && !closing){
+          if(this.MountFadeView) {
+            this.MountFadeView.fadeIn(200);
+          }
           this._onClose();
         }
         if(!show && closing){
@@ -85,10 +94,16 @@ class ZSnackBar extends Component {
     }), callback);
   }
 
+  onMountFadeView = (callbacks) => {
+    this.MountFadeView = callbacks;
+  }
+
   render(){
     let {children} = this.props;
     return (
-      <View style={{
+      <FadeInOutView 
+        onMounted={this.onMountFadeView}
+        style={{
           bottom: ContainerStyle.Snackbar.offset,
           width: "100%",
           height: "auto",
@@ -97,7 +112,7 @@ class ZSnackBar extends Component {
           backgroundColor: "transparent"
         }}>
         {children}
-      </View>
+      </FadeInOutView>
     );
   }
 
