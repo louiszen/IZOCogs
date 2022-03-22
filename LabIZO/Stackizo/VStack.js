@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, ViewPropTypes } from 'react-native';
+import { Text, View, ViewPropTypes } from "react-native";
 
 import PropsType from "prop-types";
 import _ from "lodash";
