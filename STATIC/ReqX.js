@@ -20,7 +20,10 @@ class ReqX {
       }), "error");
     },
     CannotConnect: () => {
-      STORE.Alert(LocaleX.GetIZO("Alert.CannotConnect"), "error");
+      STORE.Alert(LocaleX.Parse({
+        EN: "Cannot connect to server.",
+        TC: "不能連接伺服器"
+      }), "error");
     }
   }
 
