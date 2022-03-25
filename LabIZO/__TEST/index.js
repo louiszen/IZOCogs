@@ -1,0 +1,1 @@
+export {default as ChatizoTest} from "../Chatizo/_test/Test";

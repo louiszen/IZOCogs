@@ -13,9 +13,11 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Zocial from 'react-native-vector-icons/Zocial';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
+/**
+ * https://oblador.github.io/react-native-vector-icons/
+ */
 
 class IconX {
-
 
   /**
    * @typedef {"ant" | "entypo" | "evil" | "feather" 

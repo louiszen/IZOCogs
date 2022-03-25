@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, SafeAreaView, Modal } from "react-native";
+import { StyleSheet, View, SafeAreaView, Modal, StatusBar } from "react-native";
 import { Accessor, ColorX, STORE } from "../STATIC";
 import { when } from "mobx";
 import { observer } from "mobx-react";
