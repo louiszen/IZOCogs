@@ -13,7 +13,7 @@ let styles = StyleSheet.create({
     borderBottomRightRadius: 10,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    backgroundColor: ColorX.GetColorCSS("lightGrey")
+    backgroundColor: ColorX.GetColorCSS("lightGrey", 0.3)
   },
   out: {
     borderBottomLeftRadius: 10,
