@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Accessor } from "../../../../../../STATIC";
 import PropsType from "prop-types";
-import htmlParser from "html-react-parser";
-import TagParser from "./HTMLTags/TagParser";
-import { Box } from "@mui/system";
-import { Typography } from "@mui/material";
+import HTMLView from 'react-native-htmlview';
 
 import _ from "lodash";
+import { Text, View } from "react-native";
+import styles from "../../../../_style/msg-text";
+import stylesb from "../../../../_style/msg-bubble";
 
 /**
  * @augments {Component<Props, State>}
@@ -14,11 +14,7 @@ import _ from "lodash";
 class WMText extends Component {
 
   static propTypes = {
-    theme: PropsType.string,
-    
     addOns: PropsType.object,
-
-    HTMLSpecialTagParser: PropsType.func,
 
     hideLongAnswer: PropsType.bool,
     longAnswerLength: PropsType.number,
@@ -27,6 +23,7 @@ class WMText extends Component {
     readLessCaption: PropsType.oneOfType([PropsType.func, PropsType.string]),
 
     HTMLEnabled: PropsType.bool,
+    pos: PropsType.string,
 
     //runtime
     otext: PropsType.oneOfType([PropsType.string, PropsType.func]),
@@ -72,105 +69,54 @@ class WMText extends Component {
     });
   }
 
-  ReplaceSpecialTags = (otext) => {
-    let parsed = htmlParser(otext);
-    let {theme, HTMLSpecialTagParser, iaddOns} = this.state;
-
-    if(HTMLSpecialTagParser){
-      return HTMLSpecialTagParser(theme, parsed, iaddOns);
-    }else{
-      return TagParser.Parse(theme, parsed, iaddOns);
-    }
-  }
-
   renderReadMore(){
     let {theme, readMoreCaption} = this.state;
     return (
-      <Typography key="readmore" className={theme + " chatizo-msg-text-readmore"} onClick={() => this.setHide(false)}>
+      <Text key="readmore" className={theme + " chatizo-msg-text-readmore"} onClick={() => this.setHide(false)}>
         {readMoreCaption}
-      </Typography>
+      </Text>
     );
   }
 
   renderReadLess(){
     let {theme, readLessCaption} = this.state;
     return (
-      <Typography key="readless" className={theme + " chatizo-msg-text-readmore"} onClick={() => this.setHide(true)}>
+      <Text key="readless" className={theme + " chatizo-msg-text-readmore"} onClick={() => this.setHide(true)}>
         {readLessCaption}
-      </Typography>
+      </Text>
     );
   }
 
   renderText(){
-    let {theme, HTMLEnabled, hideLongAnswer, longAnswerLength,
-      revertReadMore, hide, otext} = this.props;
-    
+    let {HTMLEnabled, hideLongAnswer, longAnswerLength,
+      revertReadMore, hide, otext, pos} = this.props;
+      
     let rtn = [];
+
+    let ext = pos === "in"? stylesb.textIn: stylesb.textOut;
   
     if(HTMLEnabled){
-      let blocks = this.ReplaceSpecialTags(otext);
-      if(hideLongAnswer){
-        if(!Array.isArray(blocks)) {
-          blocks = [blocks];
-        }
-
-        let length = 0;
-        let short = false;
-        _.map(blocks, (o, i) => {
-
-          if(o.props && o.props.children){
-            if(typeof(o.props.children) === "string"){
-              length += o.props.children.length;
-            }
-          }else{
-            if(typeof(o) === "string"){
-              length += o.length;
-            }
-          }
-
-          if(length < longAnswerLength){
-            if(i === blocks.length - 1){
-              short = true;
-            }
-            rtn.push(o);
-          }else{
-            if(!hide){
-              rtn.push(o);
-            }
-          }
-
-        });
-
-        if(!short){
-          if(hide){
-            rtn.push(
-              this.renderReadMore()
-            );
-          }else if(!hide && revertReadMore){
-            rtn.push(
-              this.renderReadLess()
-            );
-          }
-        }
-      }
-    }else{
-      rtn = otext;
-      
+      rtn = (
+        <HTMLView
+          value={otext}
+          stylesheet={styles.text}/>
+      );
+    }else{    
       if(hideLongAnswer){
         if(otext.length > longAnswerLength){
           let showText = otext.substring(0, longAnswerLength);
           let hideText = otext.substring(longAnswerLength);
 
           rtn = [
-            <Box className={theme + " chatizo-msg-text-box"}>
-              <Box key="showtext" className={theme + " chatizo-msg-text-show"}>
+            <View>
+              <Text key="showtext" style={{...styles.text, ...ext}}>
                 {showText}
-              </Box>
+              </Text>
               {
                 !hide &&
-                <Box key="hidetext" className={theme + " chatizo-msg-text-hide"}>
+                <Text key="hidetext" style={{...styles.text, ...ext}}>
                   {hideText}
-                </Box>
+                </Text>
               }
               {
                 hide &&
@@ -180,9 +126,21 @@ class WMText extends Component {
                 !hide && revertReadMore &&
                 this.renderReadLess()
               }
-            </Box>
+            </View>
           ];
+        }else{
+          rtn = (
+            <Text style={{...styles.text, ...ext}}>
+              {otext}
+            </Text>
+          )
         }
+      }else{
+        rtn = (
+          <Text style={{...styles.text, ...ext}}>
+            {otext}
+          </Text>
+        )
       }
     }
 
@@ -191,11 +149,10 @@ class WMText extends Component {
   }
 
   render(){
-    let { theme } = this.props;
     return (
-      <Box className={theme + " chatizo-msg-text-main"}>
+      <View style={styles.main}>
         {this.renderText()}
-      </Box>
+      </View>
     );
   }
 

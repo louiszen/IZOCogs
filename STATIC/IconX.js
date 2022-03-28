@@ -20,15 +20,13 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 class IconX {
 
   /**
-   * @typedef {"ant" | "entypo" | "evil" | "feather" 
-   *  | "awesome" | "awesome5 | "fontisto"
-   *  | "foundation" | "ionic" | "mui" | "muicom" | "oct" | "zocial" | "simple"} bundle
-   */
-
-  /**
+   * @typedef { "ant" | "entypo" | "evil" | "feather" 
+   *  | "awesome" | "awesome5" | "fontisto"
+   *  | "foundation" | "ionic" | "mui" | "muicom" 
+   *  | "oct" | "zocial" | "simple" } bundle
    * 
    * @param {bundle} bundle 
-   * @param {String}} name 
+   * @param {String} name 
    * @param {Number} size 
    * @param {*} color 
    */

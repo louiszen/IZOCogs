@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import { Accessor, ZFunc } from "../../../../../../STATIC";
 import PropsType from "prop-types";
 import { HStack, VStack } from "../../../../../../LabIZO/Stackizo";
-import Holdable from "../../../../../../LabIZO/Controlizo/Holdable";
-import { Typography } from "@mui/material";
 
 import _ from "lodash";
-import { Box } from "@mui/system";
+import { Text, View } from "react-native";
+import RippleButton from "../../../../../../LEGOS/RippleButton";
 
 /**
  * @augments {Component<Props, State>}
@@ -14,7 +13,6 @@ import { Box } from "@mui/system";
 class WMButtons extends Component {
 
   static propTypes = {
-    theme: PropsType.string,
     buttons: PropsType.array,
     disabled: PropsType.bool,
 
@@ -27,7 +25,6 @@ class WMButtons extends Component {
   }
 
   static defaultProps = {
-    themeCSS: "",
     buttons: [],
     disabled: false
   }
@@ -86,23 +83,23 @@ class WMButtons extends Component {
       let sTitle = ZFunc.IfFuncExec(o.title, addOns);
       if(_.isString(sTitle)){
         sTitle = (
-          <Typography className={textClass}>
+          <Text className={textClass}>
             {sTitle}
-          </Typography>
+          </Text>
         );
       }
 
       rendered.push(
-        <Box key={i} className={theme + " chatizo-msg-btn" 
+        <View key={i} className={theme + " chatizo-msg-btn" 
           + (disabled? " disabled" : "") 
           + (buttonWidthFitContent? " fitcontent" : "")
           + (o.color? (" " + o.color) : "")}>
-          <Holdable onPress={func} disabled={disabled}>
+          <RippleButton onPress={func} disabled={disabled}>
             <HStack>
               {sTitle}
             </HStack>
-          </Holdable>
-        </Box>
+          </RippleButton>
+        </View>
       );
     });
 

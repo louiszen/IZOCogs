@@ -77,7 +77,9 @@ class ColorX {
     pureDark: {r: 0, g: 0, b: 0, a: 1},
 
     //gambot
-    gambotBlue: {r: 75, g: 104, b: 151, a: 1}
+    gambotText: {r: 51, g: 51, b: 51, a: 1},
+    gambotBlue: {r: 51, g: 51, b: 105, a: 1},
+    gambot2Blue: {r: 75, g: 104, b: 151, a: 1}
   };
 
   /**

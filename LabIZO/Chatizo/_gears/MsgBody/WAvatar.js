@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import { Accessor } from "../../../../STATIC";
 import PropsType from "prop-types";
-import { Box } from "@mui/system";
-import { ButtonBase } from "@mui/material";
+import { Image, View } from "react-native";
+import RippleIconButton from "../../../../LEGOS/RippleIconButton";
+import styles from "../../_style/avatar";
+import _ from "lodash";
+import { DOMAIN } from "../../../../../__SYSDefault/Domain";
+
+const defaultAvatar = require("../../../../../../assets/avatar.png");
 
 /**
  * @augments {Component<Props, State>}
@@ -15,7 +20,7 @@ class WAvatar extends Component {
     iuser: PropsType.shape({
       ID: PropsType.string,
       name: PropsType.string,
-      avatar: PropsType.string
+      avatar: PropsType.oneOfType([PropsType.func, PropsType.string, PropsType.object, PropsType.node]),
     }),
 
     hideImg: PropsType.bool,
@@ -56,21 +61,30 @@ class WAvatar extends Component {
   }
 
   renderImg(){
-    let {iuser, hideImg, onAvatarClicked, theme} = this.props;
+    let {iuser, hideImg} = this.props;
     if(hideImg || !iuser) return;
-    return (
-      <ButtonBase className={theme + " chatizo-avatar-btn"} onClick={onAvatarClicked}>
-        <img src={iuser?.avatar} title={iuser?.name} alt={iuser?.name}/>
-      </ButtonBase>
-    );
+
+    if(_.isString(iuser?.avatar?.uri)){
+      let uri = iuser?.avatar?.uri;
+      if(!iuser?.avatar?.uri?.startsWith("http")){
+        uri = DOMAIN + uri;
+      }
+      return (
+        <Image source={{uri: uri}} defaultSource={defaultAvatar} style={styles.img} />
+      );
+    }else{
+      return (
+        <Image source={iuser?.avatar} defaultSource={defaultAvatar} style={styles.img} />
+      );
+    }
   }
 
   render(){
-    let {theme} = this.props;
+    let {onAvatarClicked} = this.props;
     return (
-      <Box className={theme + " chatizo-avatar-main"}>
+      <RippleIconButton onLongPress={onAvatarClicked} padding={0} style={styles.main}>
         {this.renderImg()}
-      </Box>
+      </RippleIconButton>
     );
   }
 

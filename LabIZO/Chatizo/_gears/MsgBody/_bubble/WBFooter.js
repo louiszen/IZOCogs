@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { Accessor, ZTime } from "../../../../../STATIC";
+import { Accessor, ZTime, IconX } from "../../../../../STATIC";
 import PropsType from "prop-types";
 import { HStack } from "../../../../../LabIZO/Stackizo";
-import { Box } from "@mui/system";
+import { Text, View } from "react-native";
+import styles from "../../../_style/msg-footer";
+import stylesb from "../../../_style/msg-bubble";
 
 /**
  * @augments {Component<Props, State>}
@@ -10,8 +12,6 @@ import { Box } from "@mui/system";
 class WBFooter extends Component {
 
   static propTypes = {
-    theme: PropsType.string,
-
     showStatus: PropsType.bool,
     showDateTime: PropsType.bool,
     showLapseTime: PropsType.bool,
@@ -55,50 +55,58 @@ class WBFooter extends Component {
   }
 
   renderLapseTime(){
-    let { theme, showLapseTime, lapseTime } = this.state;
+    let { showLapseTime, lapseTime, pos } = this.props;
     if(!showLapseTime || !lapseTime) return;
+
+    let ext = pos === "in"? stylesb.textIn: stylesb.textOut;
+
     return (
-      <Box className={theme + " chatizo-msg-footer-lapse"}>
+      <Text style={{...styles.lapse, ...ext}}>
         {lapseTime + "s"}
-      </Box>
+      </Text>
     );
   }
 
   renderStatus(){
-    let { theme, showStatus, status } = this.state;
+    let { showStatus, status, pos } = this.props;
     if(!showStatus) return;
 
-    let icon = <div/>;
+    let fontSize = 12;
+    let color = "white";
+
+    let icon = <View/>;
     switch(status){
       case "pending":
-        icon = <i className="fas fa-clock"/>;
+        icon = IconX.Get("ant", "clockcircleo", fontSize, color);
         break;
       case "sent":
-        icon = <i className="fas fa-check"/>;
+        icon = IconX.Get("muicom", "check", fontSize, color);
         break;
       case "received": 
-      icon = <i className="fas fa-check-double"/>;
+      icon = IconX.Get("muicom", "check", fontSize, color);
         break;
       case "read":
-        icon = <i className="fas fa-book-reader"/>;
+        icon = IconX.Get("muicom", "check-all", fontSize, color);
         break;
       case "error":
-        icon = <i className="fas fa-times"/>;
+        icon = IconX.Get("mui", "error-outline", fontSize, color);
         break;
       default:
-        icon = <i className="fas fa-clock"/>; 
+        icon = IconX.Get("ant", "clockcircleo", fontSize, color);
         break;
     }
 
+    let ext = pos === "in"? stylesb.textIn: stylesb.textOut;
+
     return (
-      <Box  className={theme + " chatizo-msg-footer-status"}>
+      <View style={{...styles.status, ...ext}}>
         {icon}
-      </Box>
+      </View>
     );
   }
 
   renderDateTime(){
-    let { theme, showDateTime, createdAt } = this.state;
+    let { showDateTime, createdAt, pos } = this.props;
     if(!showDateTime) return;
     let format = "HH:mm";
     let createdAtM = ZTime.Moment(createdAt);
@@ -109,17 +117,19 @@ class WBFooter extends Component {
       format = "DD MMM, YYYY HH:mm";
     }
 
+    let ext = pos === "in"? stylesb.textIn: stylesb.textOut;
+
     return (
-      <Box className={theme + " chatizo-msg-footer-datetime"}>
+      <Text style={{...styles.datetime, ...ext}}>
         {createdAtM.format(format)}
-      </Box>
+      </Text>
     );
   }
 
   render(){
-    let { theme, pos } = this.state;
+    let { pos } = this.props;
     return (
-      <HStack className={theme + " chatizo-msg-footer-main"}>
+      <HStack style={styles.main}>
         {pos === "in" && this.renderLapseTime()}
         {pos === "out" && this.renderStatus()}
         {this.renderDateTime()}

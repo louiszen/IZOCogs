@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { Accessor } from "../../../../STATIC";
 import PropsType from "prop-types";
 import { HStack, Spacer, VStack } from "../../../../LabIZO/Stackizo";
-import WMsg from "./WMsg";
-import _ from "lodash";
-import WAvatar from "./WAvatar";
 
+import _ from "lodash";
+import styles from "../../_style/msg";
+import { ScrollView } from "react-native-gesture-handler";
+import WAvatar from "./WAvatar";
+import WMsg from "./WMsg";
 
 /**
  * @augments {Component<Props, State>}
@@ -13,7 +15,6 @@ import WAvatar from "./WAvatar";
 class WMsgBody extends Component {
 
   static propTypes = {
-    theme: PropsType.string,
 
     onAvatarClicked: PropsType.func,
 
@@ -21,7 +22,7 @@ class WMsgBody extends Component {
     user: PropsType.shape({
       ID: PropsType.string,
       name: PropsType.string,
-      avatar: PropsType.string
+      avatar: PropsType.oneOfType([PropsType.func, PropsType.string, PropsType.object, PropsType.node]),
     }),
 
     messages: PropsType.array,
@@ -75,8 +76,8 @@ class WMsgBody extends Component {
   }
 
   scrollToBottom(){
-    if (this.messageEnd) {
-      this.messageEnd.scrollIntoView({ behavior: "smooth" });
+    if(this.scrollView){
+      this.scrollView.scrollToEnd({animated: true});
     }
   }
 
@@ -165,12 +166,13 @@ class WMsgBody extends Component {
   }
 
   render(){
-    let {theme} = this.props;
     return (
-      <VStack width="100%" className={theme + " chatizo-msg-main"}>
+      <ScrollView width="100%" 
+        ref={e => {this.scrollView = e}}
+        style={styles.main} 
+        fadingEdgeLength={50}>
         {this.renderMsgs()}
-        <div ref={e => this.messageEnd = e}/>
-      </VStack>
+      </ScrollView>
     );
   }
 

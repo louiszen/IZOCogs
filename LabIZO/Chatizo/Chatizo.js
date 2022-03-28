@@ -1,22 +1,18 @@
 import React, { Component } from "react";
 import { Accessor } from "../../STATIC";
 import PropsType from "prop-types";
-import { Spacer, VStack } from "../Stackizo";
+import { VStack } from "../Stackizo";
+import 'react-native-get-random-values';
 import { v4 } from "uuid";
 
 import _ from "lodash";
 
 import WHeadline from "./_gears/Headline/WHeadline";
-
-
-// import WInputBar from "./_gears/InputBar/WInputBar";
-// import WMsgBody from "./_gears/MsgBody/WMsgBody";
-
+import WInputBar from "./_gears/InputBar/WInputBar";
+import WMsgBody from "./_gears/MsgBody/WMsgBody";
 
 // import WQuickReplies from "./_gears/QuickReplies/WQuickReplies";
 // import WAutoComplete from "./_gears/AutoComplete/WAutoComplete";
-// import WMenu from "./_gears/Menu/WMenu";
-// import WEmojiPicker from "./_gears/Emoji/WEmojiPicker";
 // import WCMD from "./_gears/CMD/WCMD";
 
 /**
@@ -31,7 +27,6 @@ class Chatizo extends Component {
       name: PropsType.string,
       avatar: PropsType.string
     }),
-    theme: PropsType.string,
 
     //basic
     width: PropsType.oneOfType([PropsType.number, PropsType.string]),
@@ -57,22 +52,13 @@ class Chatizo extends Component {
 
     //Runtime
     msgIDGen: PropsType.func,
-    HTMLSpecialTagParser: PropsType.func,
+    // HTMLSpecialTagParser: PropsType.func,
 
     //Command
     enableCMD: PropsType.bool,
     cmds: PropsType.array,
 
-    //Menu
-    showMenu: PropsType.bool,
-    menu: PropsType.arrayOf(PropsType.shape({
-      icon: PropsType.oneOfType([PropsType.func, PropsType.string, PropsType.object]),
-      cap: PropsType.oneOfType([PropsType.func, PropsType.string]),
-      func: PropsType.func
-    })),
-
     //Settings
-    enableEmoji: PropsType.bool,
     enableAttach: PropsType.bool,
     enableAudio: PropsType.bool,
     enableRecord: PropsType.bool,
@@ -149,7 +135,6 @@ class Chatizo extends Component {
       name: "TEST",
       avatar: null
     },
-    theme: "",
 
     //basic
     width: "100%",
@@ -175,18 +160,13 @@ class Chatizo extends Component {
 
     //Runtime
     msgIDGen: () => v4(),
-    HTMLSpecialTagParser: null,
+    // HTMLSpecialTagParser: null,
 
     //Command
     enableCMD: true,
     cmds: [],
 
-    //Menu
-    showMenu: false,
-    menu: [],
-
     //Settings
-    enableEmoji: true,
     enableAttach: true,
     enableAudio: true,
     enableRecord: true,
@@ -241,7 +221,7 @@ class Chatizo extends Component {
 
     canClickOnIn: true,
     canClickOnOut: true,
-    HTMLEnabled: true,
+    HTMLEnabled: false,
 
     //runtime operating
     available: true,
@@ -255,8 +235,6 @@ class Chatizo extends Component {
       inCMD: false,
       inQR: false,
       inAC: false,
-      inEmoji: false,
-      inMenu: false,
 
       typingDisabled: false,
       messages: [],
@@ -294,287 +272,251 @@ class Chatizo extends Component {
     }), () => {
       if(this.props.onMounted){
         this.props.onMounted({
-          // Append: this._Append,
-          // GetMsg: this._GetMsg,
-          // SetQuickReplies: this._setQuickReplies,
-          // SetMsgStatus: this._setMsgStatus,
-          // Clear: this._Clear,
-          // Typing: this._Typing,
-          // ScrollToBottom: this._scrollToBottom
+          Append: this._Append,
+          GetMsg: this._GetMsg,
+          SetQuickReplies: this._setQuickReplies,
+          SetMsgStatus: this._setMsgStatus,
+          Clear: this._Clear,
+          Typing: this._Typing,
+          ScrollToBottom: this._scrollToBottom
         });
       }
       if(callback) callback();
     });
   }
 
-  // _setShowMenu = (tf) => {
-  //   this.setState({
-  //     inMenu: tf
-  //   });
-  // }
+  _setShowCMD = (tf) => {
+    this.setState((state, props) => ({
+      inCMD: tf,
+    }));
+  }
 
-  // _setShowCMD = (tf) => {
-  //   this.setState((state, props) => ({
-  //     inCMD: tf,
-  //     inEmoji: tf? false : state.inEmoji
-  //   }));
-  // }
+  _Typing = (tf = true) => {
+    this.setState({
+      typing: tf
+    });
+  }
 
-  // _setShowEmoji = (tf) => {
-  //   this.setState((state, props) => ({
-  //     inEmoji: tf,
-  //     inCMD: tf? false : state.inCMD
-  //   }));
-  // }
+  _Clear = () => {
+    this.setState({
+      inQR: false,
+      inAC: false,
+      typingDisabled: false,
+      messages: [],
+      quickReplies: [],
+      typing: false,
+      input: {}
+    });
+  }
 
-  // _Typing = (tf = true) => {
-  //   this.setState({
-  //     typing: tf
-  //   });
-  // }
+  _onImageClick = () => {
 
-  // _Clear = () => {
-  //   this.setState({
-  //     inQR: false,
-  //     inAC: false,
-  //     typingDisabled: false,
-  //     messages: [],
-  //     quickReplies: [],
-  //     typing: false,
-  //     input: {}
-  //   });
-  // }
+  }
 
-  // _onImageClick = () => {
+  /**
+   * 
+   * @param {String | [String]} msgID 
+   * @param {import("./__typedef").msgstatus} status 
+   */
+  _setMsgStatus = (msgID, status) => {
+    let {messages} = this.state;
+    _.map(messages, (o, i) => {
+      if(msgID === o._id){
+        o.status = status;
+      }
+    });
+    this.setState({
+      messages: messages
+    });
+  }
 
-  // }
+  /**
+   * 
+   * @param {[import("./__typedef").quickReply]} quickReplies 
+   */
+  _setQuickReplies = (quickReplies) => {
+    this.setState({
+      quickReplies: quickReplies
+    });
+  }
 
-  // /**
-  //  * 
-  //  * @param {String | [String]} msgID 
-  //  * @param {import("./__typedef").msgstatus} status 
-  //  */
-  // _setMsgStatus = (msgID, status) => {
-  //   let {messages} = this.state;
-  //   _.map(messages, (o, i) => {
-  //     if(msgID === o._id){
-  //       o.status = status;
-  //     }
-  //   });
-  //   this.setState({
-  //     messages: messages
-  //   });
-  // }
-
-  // /**
-  //  * 
-  //  * @param {[import("./__typedef").quickReply]} quickReplies 
-  //  */
-  // _setQuickReplies = (quickReplies) => {
-  //   this.setState({
-  //     quickReplies: quickReplies
-  //   });
-  // }
-
-  // /**
-  //  * 
-  //  * @param {Boolean} b 
-  //  */
-  // _setTypingDisabled = (b) => {
-  //   this.setState({
-  //     typingDisabled: b
-  //   });
-  // }
+  /**
+   * 
+   * @param {Boolean} tf 
+   */
+  _setTypingDisabled = (tf) => {
+    this.setState({
+      typingDisabled: tf
+    });
+  }
 
 
-  // /**
-  //  * Reset Input to empty
-  //  */
-  // _resetInput = () => {
-  //   this.setState({
-  //     input: {},
-  //     inCMD: false
-  //   });
-  // }
+  /**
+   * Reset Input to empty
+   */
+  _resetInput = () => {
+    this.setState({
+      input: {},
+      inCMD: false
+    });
+  }
 
-  // /**
-  //  * 
-  //  * @returns 
-  //  */
-  // _scrollToBottom = () => {
-  //   if(this.MountWMsgBody){
-  //     this.MountWMsgBody.scrollToBottom();
-  //   }
-  // }
+  /**
+   * 
+   * @returns 
+   */
+  _scrollToBottom = () => {
+    if(this.MountWMsgBody){
+      this.MountWMsgBody.scrollToBottom();
+    }
+  }
 
-  // /**
-  //  * 
-  //  * @returns {[import("./__typedef").msgblock]}
-  //  */
-  // _GetMsg = () => {
-  //   return this.state.messages;
-  // }
+  /**
+   * 
+   * @returns {[import("./__typedef").msgblock]}
+   */
+  _GetMsg = () => {
+    return this.state.messages;
+  }
 
-  // /**
-  //  * 
-  //  * @param {[import("./__typedef").msgblock] | import("./__typedef").msgblock} msgs 
-  //  */
-  // _Append = (msgs) => {
-  //   if(!msgs) return;
-  //   if(!_.isArray(msgs)) msgs = [msgs];
+  /**
+   * 
+   * @param {[import("./__typedef").msgblock] | import("./__typedef").msgblock} msgs 
+   */
+  _Append = (msgs) => {
+    if(!msgs) return;
+    if(!_.isArray(msgs)) msgs = [msgs];
 
-  //   if(msgs.length === 0) return;
+    if(msgs.length === 0) return;
 
-  //   let lastMsg = msgs[msgs.length - 1];
-  //   let quickReplies = lastMsg.msg?.quickReplies || [];
-  //   let ACLib = lastMsg.next?.autoComplete || "";
+    let lastMsg = msgs[msgs.length - 1];
+    let quickReplies = lastMsg.msg?.quickReplies || [];
+    let ACLib = lastMsg.next?.autoComplete || "";
 
-  //   this.setState((state, props) => ({
-  //     messages: state.messages.concat(msgs),
-  //     quickReplies: quickReplies,
-  //     ACLib: ACLib,
-  //     inQR: quickReplies.length > 0,
-  //     inAC: !_.isEmpty(ACLib)
-  //   }));
-  // }
+    this.setState((state, props) => ({
+      messages: state.messages.concat(msgs),
+      quickReplies: quickReplies,
+      ACLib: ACLib,
+      inQR: quickReplies.length > 0,
+      inAC: !_.isEmpty(ACLib)
+    }));
+  }
 
-  // _onSend = () => {
-  //   console.log("_onSend");
-  //   let {input} = this.state;
-  //   let {msgIDGen, user, onSend, appendTextAfterSent} = this.props;
-  //   if(!input) return;
+  _onSend = () => {
+    console.log("_onSend");
+    let {input} = this.state;
+    let {msgIDGen, user, onSend, appendTextAfterSent} = this.props;
+    if(!input) return;
 
-  //   let msg = {
-  //     _id: msgIDGen(),
-  //     user: user,
-  //     createdAt: new Date(),
-  //     status: "sent",
-  //     msg: input
-  //   };
+    let msg = {
+      _id: msgIDGen(),
+      user: user,
+      createdAt: new Date(),
+      status: "sent",
+      msg: input
+    };
 
-  //   this._setTypingDisabled(true);
-  //   this._resetInput();
+    this._setTypingDisabled(true);
+    this._resetInput();
 
-  //   if(appendTextAfterSent){
-  //     this._Append(msg);
-  //   }
+    if(appendTextAfterSent){
+      this._Append(msg);
+    }
 
-  //   if(onSend){
-  //     onSend(input, msg._id);
-  //   }
+    if(onSend){
+      onSend(input, msg._id);
+    }
     
-  //   this._scrollToBottom();
+    this._scrollToBottom();
 
-  //   setTimeout(() => {
-  //     this._setTypingDisabled(false);
-  //   }, 100);
+    setTimeout(() => {
+      this._setTypingDisabled(false);
+    }, 100);
     
-  // }
+  }
 
-  // _onQuickReply = (quickReply) => {
-  //   console.log("_onQuickReply");
-  //   let {msgIDGen, user, onQuickReply, appendTextAfterSent} = this.props;
+  _onQuickReply = (quickReply) => {
+    console.log("_onQuickReply");
+    let {msgIDGen, user, onQuickReply, appendTextAfterSent} = this.props;
 
-  //   let msg = {
-  //     user: user,
-  //     createdAt: new Date(),
-  //     status: "sent",
-  //     _id: msgIDGen(),
-  //     msg: {
-  //       text: quickReply.title
-  //     }
-  //   };
+    let msg = {
+      user: user,
+      createdAt: new Date(),
+      status: "sent",
+      _id: msgIDGen(),
+      msg: {
+        text: quickReply.title
+      }
+    };
 
-  //   this._setTypingDisabled(true);
-  //   this._resetInput();
+    this._setTypingDisabled(true);
+    this._resetInput();
 
-  //   if(appendTextAfterSent){
-  //     this._Append(msg);
-  //   }
+    if(appendTextAfterSent){
+      this._Append(msg);
+    }
 
-  //   if(onQuickReply){
-  //     onQuickReply(quickReply, msg._id);
-  //   }
+    if(onQuickReply){
+      onQuickReply(quickReply, msg._id);
+    }
     
-  //   this._scrollToBottom();
+    this._scrollToBottom();
 
-  //   setTimeout(() => {
-  //     this._setTypingDisabled(false);
-  //   }, 100);
-  // }
+    setTimeout(() => {
+      this._setTypingDisabled(false);
+    }, 100);
+  }
 
-  // _onSendWithAttachment = (input, atth, type) => {
-  //   console.log("_onSendWithAttachment");
-  // }
+  _onSendWithAttachment = (input, atth, type) => {
+    console.log("_onSendWithAttachment");
+  }
 
-  // /**
-  //  * 
-  //  * @param {import("./__typedef").cinput} input 
-  //  * @param {Function} callback
-  //  * @returns 
-  //  */
-  // _onInputChange = (input, callback) => {
-  //   let {typingDisabled, onInputChange, enableCMD} = this.state;
-  //   if(typingDisabled) return;
+  /**
+   * 
+   * @param {import("./__typedef").cinput} input 
+   * @param {Function} callback
+   * @returns 
+   */
+  _onInputChange = (input, callback) => {
+    let {typingDisabled, onInputChange, enableCMD} = this.state;
+    if(typingDisabled) return;
 
-  //   if(onInputChange)
-  //     onInputChange(input);
+    if(onInputChange)
+      onInputChange(input);
 
-  //   let inCMD = false;
-  //   if(enableCMD && input.text.startsWith("/")){
-  //     inCMD = true;
-  //   }
+    let inCMD = false;
+    if(enableCMD && input.text.startsWith("/")){
+      inCMD = true;
+    }
 
-  //   this.setState({
-  //     input: input,
-  //   }, () => {
-  //     if(callback) callback(input);
-  //     this._setShowCMD(inCMD);
-  //   });
-  // }
+    this.setState({
+      input: input,
+    }, () => {
+      if(callback) callback(input);
+      this._setShowCMD(inCMD);
+    });
+  }
 
-  // _onEmojiClick = (emoji) => {
-  //   let {input, inputCursorPos} = this.state;
-  //   let newText = input.text || "";
-  //   newText = newText.slice(0, inputCursorPos) + emoji + newText.slice(inputCursorPos);
+  _saveCursor = (value) => {
+    this.setState({
+      inputCursorPos: value
+    });
+  }
 
-  //   this.setState((state, props) => ({
-  //     input: {
-  //       ...state.input,
-  //       text: newText
-  //     }
-  //   }));
-  // }
-
-  // _saveCursor = (value) => {
-  //   this.setState({
-  //     inputCursorPos: value
-  //   });
-  // }
-
-  // renderNotice(){
-
-  // }
-
-  // renderInputBar(){
-  //   let {input, inMenu, inEmoji, inCMD} = this.state;
-  //   return (
-  //     <WInputBar
-  //       {...this.props}
-  //       _onQuickReply={this._onQuickReply}
-  //       _onInputChange={this._onInputChange}
-  //       _onSend={this._onSend}
-  //       input={input}
-  //       inMenu={inMenu}
-  //       inEmoji={inEmoji}
-  //       inCMD={inCMD}
-  //       _setShowMenu={this._setShowMenu}
-  //       _setShowEmoji={this._setShowEmoji}
-  //       _setShowCMD={this._setShowCMD}
-  //       _saveCursor={this._saveCursor}
-  //       />
-  //   );
-  // }
+  renderInputBar(){
+    let {input, inCMD} = this.state;
+    return (
+      <WInputBar
+        {...this.props}
+        _onQuickReply={this._onQuickReply}
+        _onInputChange={this._onInputChange}
+        _onSend={this._onSend}
+        input={input}
+        inCMD={inCMD}
+        _setShowCMD={this._setShowCMD}
+        />
+    );
+  }
 
   // renderQuickReplyBar = () => {
   //   let {quickReplies} = this.state;
@@ -584,14 +526,6 @@ class Chatizo extends Component {
   //       quickReplies={quickReplies}
   //       _onQuickReply={this._onQuickReply}
   //       disabled={false}
-  //       />
-  //   );
-  // }
-
-  // renderEmoji = () => {
-  //   return (
-  //     <WEmojiPicker
-  //       onEmojiClick={this._onEmojiClick}
   //       />
   //   );
   // }
@@ -622,20 +556,20 @@ class Chatizo extends Component {
   //   );
   // }
 
-  // renderMsgBody(){
-  //   let {messages, typing} = this.state;
+  renderMsgBody(){
+    let {messages, typing} = this.state;
     
-  //   return (
-  //     <WMsgBody
-  //       {...this.props}
-  //       onMounted={this.onMountWMsgBody}
-  //       _onQuickReply={this._onQuickReply}
-  //       _onImageClick={this._onImageClick}
-  //       messages={messages}
-  //       typing={typing}
-  //       />
-  //   );
-  // }
+    return (
+      <WMsgBody
+        {...this.props}
+        onMounted={this.onMountWMsgBody}
+        _onQuickReply={this._onQuickReply}
+        _onImageClick={this._onImageClick}
+        messages={messages}
+        typing={typing}
+        />
+    );
+  }
 
   renderHeadline(){
     let {showHeadline, headlineIcon, headlineText, addOns} = this.props;
@@ -651,34 +585,21 @@ class Chatizo extends Component {
     );
   }
 
-  // renderMenu(){
-  //   return (
-  //     <WMenu
-  //       {...this.props}
-  //       _setShowMenu={this._setShowMenu}
-  //       />
-  //   );
-  // }
   /*
-  
-  {inMenu && this.renderMenu()}
-  {this.renderHeadline()}
-  {this.renderNotice()}
-  {this.renderMsgBody()}
-  {quickReplyBar && inQR && !inAC && !inEmoji && this.renderQuickReplyBar()}
-  {inCMD && !inEmoji && this.renderCMD()}
-  {inAC && !inCMD && !inEmoji && this.renderAutoComplete()}
-  {inEmoji && this.renderEmoji()}
-  {this.renderInputBar()}
-  
+  {quickReplyBar && inQR && !inAC && this.renderQuickReplyBar()}
+  {inCMD && this.renderCMD()}
+  {inAC && !inCMD && this.renderAutoComplete()}
+        
   */
 
   render(){
     let {width, height, quickReplyBar} = this.props;
-    let {inQR, inAC, inCMD, inMenu, inEmoji} = this.state;
+    let {inQR, inAC, inCMD} = this.state;
     return (
       <VStack width={width} height={height}>
         {this.renderHeadline()}
+        {this.renderMsgBody()}
+        {this.renderInputBar()}
       </VStack>
     );
   }

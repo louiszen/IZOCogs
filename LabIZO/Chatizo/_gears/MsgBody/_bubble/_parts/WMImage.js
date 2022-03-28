@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Accessor } from "../../../../../../STATIC";
 import PropsType from "prop-types";
-import { Box } from "@mui/system";
-import Holdable from "../../../../../../LabIZO/Controlizo/Holdable";
+import RippleButton from "../../../../../../LEGOS/RippleButton";
+import { View } from "react-native-web";
+import { Image } from "react-native";
 
 /**
  * @augments {Component<Props, State>}
@@ -10,13 +11,11 @@ import Holdable from "../../../../../../LabIZO/Controlizo/Holdable";
 class WMImage extends Component {
 
   static propTypes = {
-    theme: PropsType.string,
     oimage: PropsType.object,
     _onImageClicked: PropsType.func,
   }
 
   static defaultProps = {
-    theme: "",
     oimage: {},
     _onImageClicked: () => {}
   }
@@ -51,11 +50,11 @@ class WMImage extends Component {
   render(){
     let {theme, oimage, _onImageClicked} = this.props;
     return (
-      <Holdable onPress={_onImageClicked}>
-        <Box className={theme + " chatizo-msg-image"} style={oimage.style}>
-          <img src={oimage.src} alt=""/>
-        </Box>
-      </Holdable>
+      <RippleButton onPress={_onImageClicked}>
+        <View className={theme + " chatizo-msg-image"} style={oimage.style}>
+          <Image source={oimage.src} alt=""/>
+        </View>
+      </RippleButton>
     );
   }
 

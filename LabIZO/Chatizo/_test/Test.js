@@ -150,7 +150,7 @@ class Test extends Component {
   Proceed = () => {
     let {step} = this.state;
     let res = MockChatbotEngine.GetResponse(step);
-    console.log(res);
+
     this.MountChatizo.Append(res);
     this.setState({
       step: step + 1

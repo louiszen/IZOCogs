@@ -13,7 +13,6 @@ import _ from "lodash";
 class WMImgButtons extends Component {
 
   static propTypes = {
-    theme: PropsType.string,
     oimgbtns: PropsType.array,
     _onQuickReply: PropsType.func, 
     onPhoneClick: PropsType.func,
@@ -22,7 +21,6 @@ class WMImgButtons extends Component {
   }
 
   static defaultProps = {
-    theme: "",
     oimgbtns: {},
     _onQuickReply: () => {},
     onPhoneClick: () => {},

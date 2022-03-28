@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Accessor, ZFunc } from "../../../../../STATIC";
 import PropsType from "prop-types";
-import Holdable from "../../../../../LabIZO/Controlizo/Holdable";
-import { Typography } from "@mui/material";
+import RippleButton from "../../../../../LEGOS/RippleButton";
+import { Text } from "react-native";
+import styles from "../../../_style/msg-header";
 
 /**
  * @augments {Component<Props, State>}
@@ -10,13 +11,10 @@ import { Typography } from "@mui/material";
 class WBHeader extends Component {
 
   static propTypes = {
-
-    theme: PropsType.string,
-
     sender: PropsType.shape({
       ID: PropsType.string,
       name: PropsType.string,
-      avatar: PropsType.string
+      avatar: PropsType.oneOfType([PropsType.func, PropsType.string, PropsType.object, PropsType.node]),
     }),
 
     onHeaderClicked: PropsType.func,
@@ -54,13 +52,13 @@ class WBHeader extends Component {
   }
 
   render(){
-    let { sender, theme, onHeaderClicked } = this.props;
+    let { sender, onHeaderClicked } = this.props;
     return (
-      <Holdable onPress={() => ZFunc.IfFuncExec(onHeaderClicked, sender)}>
-        <Typography className={theme + " chatizo-msg-header-main"}>
+      <RippleButton onPress={() => ZFunc.IfFuncExec(onHeaderClicked, sender)} padding={0}>
+        <Text style={styles.main}>
           {sender.name}
-        </Typography>
-      </Holdable>
+        </Text>
+      </RippleButton>
     );
   }
 

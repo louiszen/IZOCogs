@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import { Accessor, ZFunc } from "../../../../STATIC";
+import { Accessor, ColorX, ZFunc } from "../../../../STATIC";
 import PropsType from "prop-types";
 import { HStack, Spacer } from "../../../../LabIZO/Stackizo";
-import { Image, Text, View } from "react-native";
+import { Image, Text, View, TouchableOpacity, TouchableNativeFeedback, Pressable } from "react-native";
 import IconX from "../../../../STATIC/IconX";
 
 import styles from "../../_style/headline";
+import { TouchableRipple } from "react-native-paper";
+import RippleIconButton from "../../../../LEGOS/RippleIconButton";
 
 /**
  * @augments {Component<Props, State>}
@@ -76,7 +78,11 @@ class WHeadline extends Component {
   }
 
   renderSettings(){
-    return IconX.Button(() => {}, "entypo", "dots-three-vertical");
+    return (
+      <RippleIconButton onPress={() => {}} onLongPress={() => {}}>
+        {IconX.Get("entypo", "dots-three-vertical", 20, "white")}
+      </RippleIconButton>
+    ); 
   }
 
   render(){

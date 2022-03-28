@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Accessor, ZFunc } from "../../../../STATIC";
+import { Accessor, ColorX, ZFunc } from "../../../../STATIC";
 import PropsType from "prop-types";
 import { HStack, VStack } from "../../../../LabIZO/Stackizo";
-import { IconButton } from "@mui/material";
-import { AttachFile, Code, Hive, InsertEmoticon, Mic, RadioButtonChecked, Send } from "@mui/icons-material";
-import { Box } from "@mui/system";
 import _ from "lodash";
-import Holdable from "../../../../LabIZO/Controlizo/Holdable";
+
+import styles from "../../_style/inputbar";
+import { TextInput } from "react-native";
+import RippleIconButton from "../../../../LEGOS/RippleIconButton";
+import IconX from "../../../../STATIC/IconX";
 
 /**
  * @augments {Component<Props, State>}
@@ -19,15 +20,7 @@ class WInputBar extends Component {
     enableCMD: PropsType.bool,
     inCMD: PropsType.bool,
 
-    //state
-    inMenu: PropsType.bool,
-    inEmoji: PropsType.bool,
-
-    //Menu
-    showMenu: PropsType.bool,
-
     //Settings
-    enableEmoji: PropsType.bool,
     enableAttach: PropsType.bool,
     enableAudio: PropsType.bool,
     enableRecord: PropsType.bool,
@@ -50,12 +43,9 @@ class WInputBar extends Component {
     available: PropsType.bool,
 
     //base functions
-    _setShowMenu: PropsType.func,
-    _setShowEmoji: PropsType.func,
     _setShowCMD: PropsType.func,
     _onInputChange: PropsType.func,
     _onSend: PropsType.func,
-    _saveCursor: PropsType.func,
     input: PropsType.object
   }
 
@@ -64,12 +54,7 @@ class WInputBar extends Component {
     enableCMD: false,
     cmds: {},
 
-    //Menu
-    inMenu: false,
-    showMenu: false,
-
     //Settings
-    enableEmoji: false,
     enableAttach: false,
     enableAudio: false,
     enableRecord: false,
@@ -84,16 +69,12 @@ class WInputBar extends Component {
     allowMusic: false,
 
     pressEnterToSend: true,
-    inputPlaceHolder: "Message",
-
-    theme: "",
+    inputPlaceHolder: "Enter your message",
 
     //runtime
     available: false,
 
     //base functions
-    _setShowMenu: () => {},
-    _setShowEmoji: () => {},
     _setShowCMD: () => {},
     _onInputChange: () => {},
     _onSend: () => {},
@@ -104,8 +85,7 @@ class WInputBar extends Component {
   constructor(){
     super();
     this.state = {
-      audioMode: true,
-      inEmoji: false
+      audioMode: true
     };
   }
 
@@ -131,32 +111,20 @@ class WInputBar extends Component {
     }), callback);
   }
 
-  toggleAV = () => {
-    let {audioMode} = this.state;
-    this.setState({
-      audioMode: !audioMode
-    });
-  }
+  // toggleAV = () => {
+  //   let {audioMode} = this.state;
+  //   this.setState({
+  //     audioMode: !audioMode
+  //   });
+  // }
 
-  toAudio = () => {
-    console.log("toAudio");
-  }
+  // toAudio = () => {
+  //   console.log("toAudio");
+  // }
 
-  toRecord = () => {
-    console.log("toRecord");
-  }
-
-  toMenu = () => {
-    console.log("toMenu");
-    let {inMenu, _setShowMenu} = this.props;
-    _setShowMenu(!inMenu);
-  }
-
-  toEmoji = () => {
-    console.log("toEmoji");
-    let {inEmoji, _setShowEmoji} = this.props;
-    _setShowEmoji(!inEmoji);
-  }
+  // toRecord = () => {
+  //   console.log("toRecord");
+  // }
 
   toCMD = () => {
     console.log("toCMD");
@@ -173,169 +141,193 @@ class WInputBar extends Component {
     return _.isEmpty(input?.text);
   }
 
-  onKeyDown = (e) => {
-    let {pressEnterToSend, _onSend} = this.props;
-    if(pressEnterToSend && e.keyCode === 13 && e.shiftKey === false){
-      _onSend();
-      e.preventDefault();
-    }
-    return false;
-  }
+  // onKeyDown = (e) => {
+  //   let {pressEnterToSend, _onSend} = this.props;
+  //   if(pressEnterToSend && e.keyCode === 13 && e.shiftKey === false){
+  //     _onSend();
+  //     e.preventDefault();
+  //   }
+  //   return false;
+  // }
 
   onInputChange = (text) => {
     let {_onInputChange} = this.props;
     ZFunc.IfFuncExec(_onInputChange, {text: text});
   }
 
-  renderImageUpload(){
+  // renderImageUpload(){
 
-  }
+  // }
 
-  renderMenuBtn(){
-    let {theme, showMenu, inMenu} = this.props;
-    if(!showMenu) return;
-    return (
-      <Holdable onPress={() => this.toMenu()}>
-        <IconButton className={theme + " chatizo-input-icon" + (inMenu? " in" : "")} size="small">
-          <Hive style={{width:"100%", height: "100%"}}/>
-        </IconButton>
-      </Holdable>
-    );
-  }
+  // renderCMDBtn(){
+  //   let {theme, enableCMD, inCMD} = this.props;
+  //   if(!enableCMD) return;
+  //   return (
+  //     <Holdable onPress={() => this.toCMD()} key="cmd">
+  //       <IconButton className={theme + " chatizo-input-icon" + (inCMD? " in" : "")} size="small">
+  //         <Code style={{width:"100%", height: "100%"}}/>
+  //       </IconButton>
+  //     </Holdable>
+  //   );
+  // }
 
-  renderEmojiBtn(){
-    let {theme, enableEmoji, inEmoji} = this.props;
-    if(!enableEmoji) return;
-    return (
-      <Holdable onPress={() => this.toEmoji()}>
-        <IconButton className={theme + " chatizo-input-icon" + (inEmoji? " in" : "")} size="small">
-          <InsertEmoticon style={{width:"100%", height: "100%"}}/>
-        </IconButton>
-      </Holdable>
-    );
-  }
+  // renderAttachBtn(){
+  //   let {theme, enableAttach} = this.props;
+  //   if(!enableAttach) return;
+  //   return (
+  //     <Holdable onPress={() => this.toAtth()} key="atth">
+  //       <IconButton className={theme + " chatizo-input-icon"} size="small">
+  //         <AttachFile style={{width:"100%", height: "100%"}}/>
+  //       </IconButton>
+  //     </Holdable>
+  //   );
+
+  // }
+
+  // renderAudioRecordBtn(){
+  //   let {theme, enableAudio, enableRecord} = this.props;
+  //   let {audioMode} = this.state;
+  //   if(!enableAudio && !enableRecord) return;
+
+  //   if(enableAudio && (!enableRecord || audioMode)){
+  //     return (
+  //       <Holdable onPress={() => this.toggleAV()} onLongPress={() => this.toAudio()} key="av">
+  //         <IconButton className={theme + " chatizo-input-icon"} size="small">
+  //           <Mic style={{width:"100%", height: "100%"}}/>
+  //         </IconButton>
+  //       </Holdable>
+  //     );
+  //   }
+
+  //   if(enableRecord && (!enableAudio || !audioMode)){
+  //     return (
+  //       <Holdable onPress={() => this.toggleAV()} onLongPress={() => this.toRecord()} key="ar">
+  //         <IconButton className={theme + " chatizo-input-icon"} size="small">
+  //           <RadioButtonChecked style={{width:"100%", height: "100%"}}/>
+  //         </IconButton>
+  //       </Holdable>
+  //     );
+  //   }
+
+  // }
+
+  // renderSendBtn(){
+  //   let {theme, _onSend} = this.props;
+  //   if(!this._isInputEmpty()){
+  //     return (
+  //       <Holdable onPress={() => _onSend()} key="send">
+  //         <IconButton className={theme + " chatizo-input-icon send"} size="small">
+  //           <Send style={{width:"100%", height: "100%"}}/>
+  //         </IconButton>
+  //       </Holdable>
+  //     );
+  //   }
+  // }
+
+  // renderButtons(){
+  //   let {inCMD} = this.props;
+  //   let rtn = [];
+  //   if(this._isInputEmpty() || inCMD){
+  //     rtn.push(this.renderCMDBtn());
+  //   }
+
+  //   if(this._isInputEmpty()){
+  //     rtn.push(
+  //       this.renderAttachBtn(),
+  //       this.renderAudioRecordBtn()
+  //     );
+  //   }else{
+  //     rtn.push(
+  //       this.renderSendBtn()
+  //     );
+  //   }
+  //   return rtn;
+  // }
 
   renderTextField(){
-    let {inputPlaceHolder, addOns, available, input, _saveCursor} = this.props;
+    let {inputPlaceHolder, addOns, available, input} = this.props;
     let ph = ZFunc.IfFuncExec(inputPlaceHolder, addOns);
     return (
-      <Box className="chatizo-input-text-outter" >
-        <input
-          className="chatizo-input-text-inner"
-          onKeyDown={e => this.onKeyDown(e)}
-          onChange={e => this.onInputChange(e.target.value)}
-          rows="1"
-          placeholder={ph}
-          value={input?.text || ""}
-          disabled={!available}
-          onBlur={e => _saveCursor(e.target.selectionStart)}
-          />
-      </Box>
+      <TextInput
+        style={styles.text}
+        onChangeText={text => this.onInputChange(text)}
+        placeholder={ph}
+        value={input?.text || ""}
+        editable={available}
+        />
     );
   }
 
   renderCMDBtn(){
-    let {theme, enableCMD, inCMD} = this.props;
+    let {enableCMD, inCMD} = this.props;
     if(!enableCMD) return;
     return (
-      <Holdable onPress={() => this.toCMD()} key="cmd">
-        <IconButton className={theme + " chatizo-input-icon" + (inCMD? " in" : "")} size="small">
-          <Code style={{width:"100%", height: "100%"}}/>
-        </IconButton>
-      </Holdable>
+      <RippleIconButton key="cmd" padding={5} onPress={() => this.toCMD()}>
+        {IconX.Get("entypo", "code", 25, ColorX.GetColorCSS("grey", inCMD? 0.8: 0.3))}
+      </RippleIconButton>
     );
-  }
-
-  renderAttachBtn(){
-    let {theme, enableAttach} = this.props;
-    if(!enableAttach) return;
-    return (
-      <Holdable onPress={() => this.toAtth()} key="atth">
-        <IconButton className={theme + " chatizo-input-icon"} size="small">
-          <AttachFile style={{width:"100%", height: "100%"}}/>
-        </IconButton>
-      </Holdable>
-    );
-
-  }
-
-  renderAudioRecordBtn(){
-    let {theme, enableAudio, enableRecord} = this.props;
-    let {audioMode} = this.state;
-    if(!enableAudio && !enableRecord) return;
-
-    if(enableAudio && (!enableRecord || audioMode)){
-      return (
-        <Holdable onPress={() => this.toggleAV()} onLongPress={() => this.toAudio()} key="av">
-          <IconButton className={theme + " chatizo-input-icon"} size="small">
-            <Mic style={{width:"100%", height: "100%"}}/>
-          </IconButton>
-        </Holdable>
-      );
-    }
-
-    if(enableRecord && (!enableAudio || !audioMode)){
-      return (
-        <Holdable onPress={() => this.toggleAV()} onLongPress={() => this.toRecord()} key="ar">
-          <IconButton className={theme + " chatizo-input-icon"} size="small">
-            <RadioButtonChecked style={{width:"100%", height: "100%"}}/>
-          </IconButton>
-        </Holdable>
-      );
-    }
-
   }
 
   renderSendBtn(){
-    let {theme, _onSend} = this.props;
+    let {_onSend} = this.props;
     if(!this._isInputEmpty()){
       return (
-        <Holdable onPress={() => _onSend()} key="send">
-          <IconButton className={theme + " chatizo-input-icon send"} size="small">
-            <Send style={{width:"100%", height: "100%"}}/>
-          </IconButton>
-        </Holdable>
+        <RippleIconButton key="send" padding={5} onPress={() => _onSend()}>
+          {IconX.Get("mui", "send", 25, ColorX.GetColorCSS("gambotBlue"))}
+        </RippleIconButton>
       );
     }
   }
 
-  renderButtons(){
+  renderAtthBtn(){
+    return (
+      <RippleIconButton key="atth" padding={5} onPress={() => this.toAtth()}>
+        {IconX.Get("mui", "add-circle", 25, ColorX.GetColorCSS("gambotBlue"))}
+      </RippleIconButton>
+    );
+  }
+
+  renderLeftButtons(){
+    return (
+      <HStack width="auto">
+        {this.renderAtthBtn()}
+      </HStack>
+    );
+  }
+
+  renderRightButtons(){
+
     let {inCMD} = this.props;
     let rtn = [];
     if(this._isInputEmpty() || inCMD){
       rtn.push(this.renderCMDBtn());
     }
 
-    if(this._isInputEmpty()){
-      rtn.push(
-        this.renderAttachBtn(),
-        this.renderAudioRecordBtn()
-      );
-    }else{
+    if(!this._isInputEmpty()){
       rtn.push(
         this.renderSendBtn()
       );
     }
-    return rtn;
+    return (
+      <HStack width="auto">
+        {rtn}
+      </HStack>
+    );
   }
 
   renderMainBar(){
-    let {theme} = this.props;
     return (
-      <HStack width="100%" className={theme + " chatizo-input-bar"} spacing={2}>
-        {this.renderMenuBtn()}
-        {this.renderEmojiBtn()}
+      <HStack width="100%" style={styles.bar} spacing={5}>
+        {this.renderLeftButtons()}
         {this.renderTextField()}
-        {this.renderButtons()}
+        {this.renderRightButtons()}
       </HStack>
     );
   }
 
   render(){
-    let {theme} = this.props;
     return (
-      <VStack width="100%" className={theme + " chatizo-input-main"}>
-        {this.renderImageUpload()}
+      <VStack width="100%" style={styles.main}>
         {this.renderMainBar()}
       </VStack>
     );

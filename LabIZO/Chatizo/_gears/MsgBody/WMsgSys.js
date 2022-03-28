@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Accessor, ZFunc } from "../../../../STATIC";
 import PropsType from "prop-types";
-import { Box } from "@mui/system";
+import { Text, View } from "react-native";
+import styles from "../../_style/msg-system";
 
 /**
  * @augments {Component<Props, State>}
@@ -9,14 +10,13 @@ import { Box } from "@mui/system";
 class WMsgSys extends Component {
 
   static propTypes = {
-    theme: PropsType.string,
     text: PropsType.oneOfType([PropsType.string, PropsType.func]),
-    
     addOns: PropsType.object
   }
 
   static defaultProps = {
-    text: ""
+    text: "",
+    addOns: {}
   }
 
   constructor(){
@@ -47,12 +47,14 @@ class WMsgSys extends Component {
   }
 
   render(){
-    let {theme, text, addOns} = this.props;
+    let {text, addOns} = this.props;
     let stext = ZFunc.IfFuncExec(text, addOns);
     return (
-      <Box className={theme + " chatizo-msg-system"}>
-        {stext}
-      </Box>
+      <View style={styles.main}>
+        <Text style={styles.text}>
+          {stext}
+        </Text>
+      </View>
     );
   }
 

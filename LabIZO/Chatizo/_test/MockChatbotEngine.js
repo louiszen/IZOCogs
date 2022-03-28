@@ -1,6 +1,7 @@
 import { ZTime } from "../../../STATIC";
 import { v1 } from "uuid";
 
+const gambotIcon = require("../../../../../assets/Icons/gambot.png");
 
 class MockChatbotEngine {
 
@@ -12,7 +13,7 @@ class MockChatbotEngine {
     return {
       ID: "1",
       name: "Gambot",
-      avatar: "/Images/Icon/gambot.png"
+      avatar: gambotIcon
     };
   }
 

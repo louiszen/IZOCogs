@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { Accessor } from "../../../../STATIC";
 import PropsType from "prop-types";
 import WMsgSys from "./WMsgSys";
-import Holdable from "../../../../LabIZO/Controlizo/Holdable";
-import { Box } from "@mui/system";
 import WBHeader from "./_bubble/WBHeader";
 import WBFooter from "./_bubble/WBFooter";
 import WBBody from "./_bubble/WBBody";
+import RippleButton from "../../../../LEGOS/RippleButton";
+import { View } from "react-native";
+import styles from "../../_style/msg-bubble";
 
 /**
  * @augments {Component<Props, State>}
@@ -14,8 +15,6 @@ import WBBody from "./_bubble/WBBody";
 class WMsg extends Component {
 
   static propTypes = {
-    theme: PropsType.string,
-
     onMsgPressed: PropsType.func,
     onMsgLongPressed: PropsType.func,
 
@@ -37,12 +36,22 @@ class WMsg extends Component {
   }
 
   static defaultProps = {
+    onMsgPressed: () => {},
+    onMsgLongPressed: undefined,
+
+    showHeader: true,
+    showFooter: true,
+
+    canClickOnIn: true,
+    canClickOnOut: false,
+
     _onQuickReply: () => {},
 
     pos: "in",
     item: {msg:{text: ""}},
     last: false,
-    typingBubbles: false
+    typingBubbles: false,
+    hideHeader: false
   }
 
   constructor(){
@@ -113,7 +122,7 @@ class WMsg extends Component {
 
   render(){
 
-    let {theme, onMsgPressed, onMsgLongPressed,
+    let {onMsgPressed, onMsgLongPressed,
       canClickOnIn, canClickOnOut,
       item, pos} = this.props;
     let {_id, msg} = item;
@@ -130,23 +139,40 @@ class WMsg extends Component {
 
     let canClick = (canClickOnIn && pos === "in") || (canClickOnOut && pos === "out");
 
+    let style = {
+      ...styles.main,
+    };
+
+    if(pos === "in"){
+      style = {
+        ...style,
+        ...styles.in
+      };
+    }else{
+      style = {
+        ...style,
+        ...styles.out
+      };
+    }
+
     if(canClick){
       return (
-        <Box className={theme + " chatizo-msg-bubble" + (pos === "in"? " in" : " out")}>
-          <Holdable onPress={onMsgPressed} onHold={onMsgLongPressed}> 
+        <RippleButton 
+          onPress={onMsgPressed} 
+          onLongPress={onMsgLongPressed} 
+          style={style}> 
           {this.renderHeader()}
           {this.renderMsg()}
           {this.renderFooter()}
-          </Holdable>
-        </Box>
+        </RippleButton>
       );
     }
     return (
-      <Box className={theme + " chatizo-msg-bubble" + (pos === "in"? " in" : " out")}>
+      <View style={style}>
         {this.renderHeader()}
         {this.renderMsg()}
         {this.renderFooter()}
-      </Box>
+      </View>
     );
   }
 

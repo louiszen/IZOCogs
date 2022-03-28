@@ -1,7 +1,7 @@
-import { StyleSheet, ViewPropTypes } from "react-native";
+import { StyleSheet } from "react-native";
 import { ColorX } from "../../../STATIC";
 
-let styleSheet = StyleSheet.create({
+let styles = StyleSheet.create({
   main: {
     position: "relative",
     height: 50,
@@ -29,4 +29,4 @@ let styleSheet = StyleSheet.create({
   }
 });
 
-export default styleSheet;
+export default styles;
