@@ -3,7 +3,7 @@ import { ColorX } from "../../../STATIC";
 
 let styles = StyleSheet.create({
   main: {
-    marginLeft: 2,
+    marginHorizontal: 2,
     width: "100%"
   },
   text: {

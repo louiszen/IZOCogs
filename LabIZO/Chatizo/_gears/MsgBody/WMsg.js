@@ -5,9 +5,10 @@ import WMsgSys from "./WMsgSys";
 import WBHeader from "./_bubble/WBHeader";
 import WBFooter from "./_bubble/WBFooter";
 import WBBody from "./_bubble/WBBody";
-import RippleButton from "../../../../LEGOS/RippleButton";
-import { View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import styles from "../../_style/msg-bubble";
+import WBExtra from "./_bubble/WBExtra";
+import { VStack } from "../../../Stackizo";
 
 /**
  * @augments {Component<Props, State>}
@@ -23,6 +24,8 @@ class WMsg extends Component {
 
     canClickOnIn: PropsType.bool,
     canClickOnOut: PropsType.bool,
+
+    ButtonOutSideBubble: PropsType.bool,
 
     //base func
     _onQuickReply: PropsType.func,
@@ -44,6 +47,8 @@ class WMsg extends Component {
 
     canClickOnIn: true,
     canClickOnOut: false,
+
+    ButtonOutSideBubble: true,
 
     _onQuickReply: () => {},
 
@@ -105,6 +110,17 @@ class WMsg extends Component {
     );
   }
 
+  renderExtra(){
+    let {item} = this.props;
+    let {msg} = item;
+    return (
+      <WBExtra
+        {...this.props}
+        imsg={msg}
+        />
+    );
+  }
+
   renderFooter(){
     let {showFooter, typingBubbles, item} = this.props;
     if(!showFooter || typingBubbles) return;
@@ -123,7 +139,7 @@ class WMsg extends Component {
   render(){
 
     let {onMsgPressed, onMsgLongPressed,
-      canClickOnIn, canClickOnOut,
+      canClickOnIn, canClickOnOut, ButtonOutSideBubble,
       item, pos} = this.props;
     let {_id, msg} = item;
 
@@ -140,7 +156,7 @@ class WMsg extends Component {
     let canClick = (canClickOnIn && pos === "in") || (canClickOnOut && pos === "out");
 
     let style = {
-      ...styles.main,
+      ...styles.bubble,
     };
 
     if(pos === "in"){
@@ -157,22 +173,28 @@ class WMsg extends Component {
 
     if(canClick){
       return (
-        <RippleButton 
+        <TouchableOpacity 
           onPress={onMsgPressed} 
           onLongPress={onMsgLongPressed} 
-          style={style}> 
-          {this.renderHeader()}
-          {this.renderMsg()}
-          {this.renderFooter()}
-        </RippleButton>
+          style={styles.main}> 
+          <VStack style={style} alignItems={"flex-start"}>
+            {this.renderHeader()}
+            {this.renderMsg()}
+            {this.renderFooter()}
+          </VStack>
+          {ButtonOutSideBubble && this.renderExtra()}
+        </TouchableOpacity>
       );
     }
     return (
-      <View style={style}>
-        {this.renderHeader()}
-        {this.renderMsg()}
-        {this.renderFooter()}
-      </View>
+      <VStack style={styles.main}>
+        <VStack style={style} alignItems={"flex-start"}>
+          {this.renderHeader()}
+          {this.renderMsg()}
+          {this.renderFooter()}
+        </VStack>
+        {ButtonOutSideBubble && this.renderExtra()}
+      </VStack>
     );
   }
 

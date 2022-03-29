@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { Accessor } from "../../../../../STATIC";
 import PropsType from "prop-types";
-import { VStack } from "../../../../../LabIZO/Stackizo";
+import { VStack } from "../../../../Stackizo";
 import WMText from "./_parts/WMText";
 import WMButtons from "./_parts/WMButtons";
+import styles from "../../../_style/msg-bubble";
 // import WMTyping from "./_parts/WMTyping";
 // import WMImage from "./_parts/WMImage";
 // import WMVideo from "./_parts/WMVideo";
@@ -12,13 +13,11 @@ import WMButtons from "./_parts/WMButtons";
 /**
  * @augments {Component<Props, State>}
  */
-class WBBody extends Component {
+class WBExtra extends Component {
 
   static propTypes = {
 
     pos: PropsType.string,
-
-    ButtonOutSideBubble: PropsType.bool,
 
     showQuickRepliesAsButtons: PropsType.bool,
     disableButtonsAfterSend: PropsType.bool, 
@@ -43,7 +42,7 @@ class WBBody extends Component {
   }
 
   componentDidUpdate(prevProps, prevState){
-    if(!Accessor.IsIdentical(prevProps, this.props, Object.keys(WBBody.defaultProps))){
+    if(!Accessor.IsIdentical(prevProps, this.props, Object.keys(WBExtra.defaultProps))){
       this._setAllStates();
     }
   }
@@ -110,7 +109,7 @@ class WBBody extends Component {
   // }
 
   render(){
-    let {imsg, theme, showQuickRepliesAsButtons, typingBubbles, ButtonOutSideBubble} = this.props;
+    let {imsg, theme, showQuickRepliesAsButtons, typingBubbles} = this.props;
     // if (typingBubbles){
     //   return (
     //     <VStack width="100%" className={theme + " chatizo-msg-body"}>
@@ -119,19 +118,15 @@ class WBBody extends Component {
     //   );
     // }
     return (
-      <VStack width="100%" className={theme + " chatizo-msg-body"}>
-        {/* {imsg.title && this.renderText(imsg.title)} */}
-        {/* {imsg.image && this.renderImage(imsg.image)} */}
-        {/* {imsg.video && this.renderVideo(imsg.video)} */}
-        {imsg.text && this.renderText(imsg.text)}
-        {/* {!ButtonOutSideBubble && showQuickRepliesAsButtons && imsg.quickReplies && this.renderButtons(imsg.quickReplies)} */}
-        {!ButtonOutSideBubble && imsg.buttons && this.renderButtons(imsg.buttons)}
-        {/* {!ButtonOutSideBubble && imsg.imgButtons && this.renderImgButtons(imsg.imgButtons)} */}
-        {/* {!ButtonOutSideBubble && imsg.templates && this.renderTemplates(imsg.tempaltes)} */}
+      <VStack width="100%" style={styles.extra}>
+        {/* {showQuickRepliesAsButtons && imsg.quickReplies && this.renderButtons(imsg.quickReplies)} */}
+        {imsg.buttons && this.renderButtons(imsg.buttons)}
+        {/* {imsg.imgButtons && this.renderImgButtons(imsg.imgButtons)} */}
+        {/* {imsg.templates && this.renderTemplates(imsg.tempaltes)} */}
       </VStack>
     );
   }
 
 }
 
-export default WBBody;
+export default WBExtra;

@@ -6,20 +6,32 @@ let styles = StyleSheet.create({
     marginTop: 2,
     marginHorizontal: 1,
     width: "auto",
-    maxWidth: "70%"
+    maxWidth: "70%",
+    padding: 0
+  },
+  bubble: {
+    paddingHorizontal: 10,
+    paddingTop: 5,
+    paddingBottom: 3,
+    width: "100%"
+  },
+  extra: {
+    paddingHorizontal: 20,
   },
   in: {
     borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    backgroundColor: ColorX.GetColorCSS("lightGrey", 0.3)
+    borderBottomRightRadius: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderWidth: 1,
+    borderColor: ColorX.GetColorCSS("gambotBlue", 0.1),
+    backgroundColor: ColorX.GetColorCSS("white", 0.25)
   },
   out: {
-    borderBottomLeftRadius: 10,
+    borderBottomLeftRadius: 20,
     borderBottomRightRadius: 0,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     backgroundColor: ColorX.GetColorCSS("gambotBlue")
   },
   textIn: {
@@ -27,6 +39,12 @@ let styles = StyleSheet.create({
   },
   textOut: {
     color: ColorX.GetColorCSS("pureWhite")
+  },
+  textInAlign: {
+    textAlign: "left"
+  },
+  textOutAlign: {
+    textAlign: "right"
   }
 });
 

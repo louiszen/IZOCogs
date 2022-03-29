@@ -93,8 +93,10 @@ class WMText extends Component {
       
     let rtn = [];
 
-    let ext = pos === "in"? stylesb.textIn: stylesb.textOut;
-  
+    let extColor = pos === "in"? stylesb.textIn: stylesb.textOut;
+    let extAlign  = pos === "in"? stylesb.textInAlign: stylesb.textOutAlign;
+    let mergedStyle = {...styles.text, ...extColor, ...extAlign};
+
     if(HTMLEnabled){
       rtn = (
         <HTMLView
@@ -109,12 +111,12 @@ class WMText extends Component {
 
           rtn = [
             <View>
-              <Text key="showtext" style={{...styles.text, ...ext}}>
+              <Text key="showtext" style={mergedStyle}>
                 {showText}
               </Text>
               {
                 !hide &&
-                <Text key="hidetext" style={{...styles.text, ...ext}}>
+                <Text key="hidetext" style={mergedStyle}>
                   {hideText}
                 </Text>
               }
@@ -130,14 +132,14 @@ class WMText extends Component {
           ];
         }else{
           rtn = (
-            <Text style={{...styles.text, ...ext}}>
+            <Text style={mergedStyle}>
               {otext}
             </Text>
           )
         }
       }else{
         rtn = (
-          <Text style={{...styles.text, ...ext}}>
+          <Text style={mergedStyle}>
             {otext}
           </Text>
         )

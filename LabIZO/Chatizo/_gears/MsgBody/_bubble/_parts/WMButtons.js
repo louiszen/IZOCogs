@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Accessor, ZFunc } from "../../../../../../STATIC";
+import { Accessor, ColorX, ZFunc } from "../../../../../../STATIC";
 import PropsType from "prop-types";
-import { HStack, VStack } from "../../../../../../LabIZO/Stackizo";
+import { HStack, VStack, Spacer } from "../../../../../../LabIZO/Stackizo";
 
 import _ from "lodash";
 import { Text, View } from "react-native";
 import RippleButton from "../../../../../../LEGOS/RippleButton";
+import styles from "../../../../_style/msg-button";
 
 /**
  * @augments {Component<Props, State>}
@@ -57,7 +58,7 @@ class WMButtons extends Component {
   }
 
   renderButtons(){
-    let {theme, buttons, 
+    let {buttons, 
       _onQuickReply, onPhoneClick, onWebClick, 
       disabled, buttonWidthFitContent, addOns} = this.props;
 
@@ -76,33 +77,41 @@ class WMButtons extends Component {
           break;
       } 
 
-      let textClass = theme + " chatizo-msg-btn-text" 
-      + (disabled? " disabled" : "")
-      + (o.color? (" " + o.color) : "");
+      let textStyle = styles.text;
+
+      if(o.color){
+        textStyle = {...textStyle, color: ColorX.GetColorCSS(o.color)};
+      }
 
       let sTitle = ZFunc.IfFuncExec(o.title, addOns);
       if(_.isString(sTitle)){
         sTitle = (
-          <Text className={textClass}>
+          <Text style={textStyle}>
             {sTitle}
           </Text>
         );
       }
 
+      let style = styles.main;
+
+      if(disabled) style = {...style, ...styles.disabled};
+      if(buttonWidthFitContent) style = {...style, ...styles.fitContent};
+
+      if(o.color){
+        style = {...style, borderColor: ColorX.GetColorCSS(o.color, 0.5)};
+      }
+
       rendered.push(
-        <View key={i} className={theme + " chatizo-msg-btn" 
-          + (disabled? " disabled" : "") 
-          + (buttonWidthFitContent? " fitcontent" : "")
-          + (o.color? (" " + o.color) : "")}>
-          <RippleButton onPress={func} disabled={disabled}>
-            <HStack>
+        <RippleButton key={i} onPress={func} 
+          disabled={disabled} style={style}>
+          <HStack>
+            <Spacer/>
               {sTitle}
-            </HStack>
-          </RippleButton>
-        </View>
+            <Spacer/>
+          </HStack>
+        </RippleButton>
       );
     });
-
     return rendered;
   }
 

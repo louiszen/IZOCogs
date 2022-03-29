@@ -128,6 +128,9 @@ class WBFooter extends Component {
 
   render(){
     let { pos } = this.props;
+    let style = styles.main;
+    if(pos === "in") style = {...style, ...styles.in};
+    if(pos === "out") style = {...style, ...styles.out};
     return (
       <HStack style={styles.main}>
         {pos === "in" && this.renderLapseTime()}

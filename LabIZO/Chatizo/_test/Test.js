@@ -5,6 +5,7 @@ import MockChatbotEngine from "./MockChatbotEngine";
 import { View } from "react-native";
 
 const gambotIcon = require("../../../../../assets/Icons/gambot.png");
+const qskIcon = require("../../../../../assets/Icons/QSK.png");
 
 const autoCompleteLibs = {
   workNature: [
@@ -114,7 +115,9 @@ class Test extends Component {
   }
 
   componentDidMount(){
-    this._setAllStates();
+    this._setAllStates(() => {
+      this.Test();
+    });
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -139,11 +142,17 @@ class Test extends Component {
     this.MountChatizo = callbacks;
   }
 
+  Test = () => {
+    let res = MockChatbotEngine.Test();
+    this.MountChatizo.Append(res);
+  }
+
   Start = () => {
     this.setState({
       step: 0
     }, () => {
-      this.Proceed();
+      let res = MockChatbotEngine.Start();
+      this.MountChatizo.Append(res);
     });
   }
 
@@ -182,13 +191,14 @@ class Test extends Component {
           user={{
             ID: "0",
             name: "User",
-            avatar: "/Images/QSK.png"
+            avatar: qskIcon
           }}
           autoCompleteLibs={autoCompleteLibs}
-          showMenu={false}
           onSend={this.onSend}
           onQuickReply={this.onQR}
           enableCMD={true}
+          canClickOnIn={true}
+          ButtonOutSideBubble={true}
           cmds={
             [
               {

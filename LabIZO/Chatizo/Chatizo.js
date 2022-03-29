@@ -25,7 +25,7 @@ class Chatizo extends Component {
     user: PropsType.shape({
       ID: PropsType.string,
       name: PropsType.string,
-      avatar: PropsType.string
+      avatar: PropsType.oneOfType([PropsType.func, PropsType.string, PropsType.object, PropsType.node]),
     }),
 
     //basic
@@ -97,6 +97,8 @@ class Chatizo extends Component {
     showHeadline: PropsType.bool,
     headlineIcon: PropsType.oneOfType([PropsType.func, PropsType.string, PropsType.object, PropsType.node]),
     headlineText: PropsType.oneOfType([PropsType.func, PropsType.string]),
+
+    ButtonOutSideBubble: PropsType.bool,
 
     showNotice: PropsType.bool,
 
@@ -201,6 +203,8 @@ class Chatizo extends Component {
     showHeadline: true,
     headlineIcon: "",
     headlineText: "",
+
+    ButtonOutSideBubble: true,
 
     showHeader: true,
     showFooter: true,

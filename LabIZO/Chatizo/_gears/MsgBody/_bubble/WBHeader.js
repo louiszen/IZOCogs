@@ -4,6 +4,7 @@ import PropsType from "prop-types";
 import RippleButton from "../../../../../LEGOS/RippleButton";
 import { Text } from "react-native";
 import styles from "../../../_style/msg-header";
+import { HStack, Spacer } from "../../../../Stackizo";
 
 /**
  * @augments {Component<Props, State>}
@@ -54,11 +55,14 @@ class WBHeader extends Component {
   render(){
     let { sender, onHeaderClicked } = this.props;
     return (
-      <RippleButton onPress={() => ZFunc.IfFuncExec(onHeaderClicked, sender)} padding={0}>
-        <Text style={styles.main}>
-          {sender.name}
-        </Text>
-      </RippleButton>
+      <HStack>
+        <RippleButton onPress={() => ZFunc.IfFuncExec(onHeaderClicked, sender)} style={styles.main}>
+          <Text style={styles.text}>
+            {sender.name}
+          </Text>
+        </RippleButton>
+        <Spacer/>
+      </HStack>
     );
   }
 

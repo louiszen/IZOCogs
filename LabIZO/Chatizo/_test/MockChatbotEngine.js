@@ -2,8 +2,115 @@ import { ZTime } from "../../../STATIC";
 import { v1 } from "uuid";
 
 const gambotIcon = require("../../../../../assets/Icons/gambot.png");
+const favIcon = require("../../../../../assets/favicon.png");
 
 class MockChatbotEngine {
+
+  static Test(){
+    let user = MockChatbotEngine.GetUser();
+    return [
+      {
+        _id: v1(),
+        createdAt: ZTime.Now(),
+        lapseTime: 0.5,
+        user: null,
+        msg: {
+          system: "Testing - System",
+        }
+      },
+      {
+        _id: v1(),
+        createdAt: ZTime.Now(),
+        lapseTime: 0.5,
+        user: user,
+        msg: {
+          text: "Testing - Text",
+          image: [
+            {
+              src: "https://picsum.photos/200"
+            },
+            {
+              src: "https://picsum.photos/200"
+            },
+            {
+              src: "https://picsum.photos/200"
+            }
+          ],
+          imgButtons: [
+            {
+              image: favIcon,
+              title: "Testing - imgBtn 1",
+              payload: "Testing1",
+              type: "inapp",
+              showText: true
+            },
+            {
+              image: "https://picsum.photos/200",
+              title: "Testing - imgBtn 2",
+              payload: "Testing2",
+              type: "inapp",
+              showText: false
+            },
+            {
+              image: "https://picsum.photos/200",
+              title: "Testing - imgBtn 3",
+              payload: "https://picsum.photos/200",
+              type: "web",
+              showText: false
+            }
+          ],
+          buttons: [
+            {
+              title: "Testing - Button 1",
+              payload: "btn 1",
+              color: "red"
+            },
+            {
+              title: "Testing - Button 2",
+              payload: "btn 2",
+              color: "green"
+            }
+          ],
+          quickReplies: [
+            {
+              title: "Testing - quickReplies 1",
+              payload: "btn 1",
+              color: "red"
+            },
+            {
+              title: "Testing - quickReplies 2",
+              payload: "btn 2",
+              color: "green"
+            }
+          ]
+        }
+      }
+    ];
+  }
+
+  static Start(){
+    let user = MockChatbotEngine.GetUser();
+    return [
+      {
+        _id: v1(),
+        createdAt: ZTime.Now(),
+        lapseTime: 0.5,
+        user: user,
+        msg: {
+          text: "Hi! I am Gambot, what can I help you?",
+          imgButtons: [
+            {
+              image: favIcon,
+              title: "View all activities",
+              payload: "ViewAllActivies",
+              type: "inapp",
+              showText: true
+            }
+          ]
+        }
+      }
+    ];
+  }
 
   static RecordAns(){
 
